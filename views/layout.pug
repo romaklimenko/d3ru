@@ -10,6 +10,10 @@ html(lang='ru')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='icon', type='image/png' href='favicon_ru.png')
   body
-    img(src='images/logo_main_retina.png', height=57, style={position: 'fixed', top: '5px', left: '5px'})
+    img(src='/images/logo_main_retina.png', height=57, style={position: 'fixed', top: '5px', left: '5px'})
     .container
       block content
+    script(src='https://d3js.org/d3.v5.min.js')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=", crossorigin="anonymous")
+    script(src="/javascripts/tools.js")
+    block script

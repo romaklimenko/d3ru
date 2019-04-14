@@ -2,6 +2,27 @@ extends layout
 
 block content
   include includes/navigation.pug
-  .row
+  .row#intro(style={ display: 'none' })
     .col-md-12
       h3 Выборы
+      a(href='https://d3.ru/democracy/cik/', target='_blank') Демократией
+      |
+      | для краткости называется ситуация, когда владелец подсайта включил на нем выборы и стал основателем.
+
+      br
+      br
+  .row#input(style={ display: 'none' })
+    .col-md-12
+      p Введите название сообщества, чтобы посмотреть последние результаты выборов на нем:
+      input#domain-name-input(type='text')
+      input#ok(type="submit", value="OK")
+      ul.list-unstyled#recent-elections
+  .row#report(style={ display: 'none' })
+    .col-md-12
+      h4#domain-name
+      svg#elections-chart(height=400,width=800)
+      #legend
+
+
+block script
+  script(src="/javascripts/elections.js")
