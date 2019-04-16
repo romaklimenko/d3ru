@@ -36,18 +36,22 @@ const getActivities = async (user, type) => {
 router.use(cache(60 * 60 * 24 * 7, 500))
 
 router.get('/', async (req, res, next) => {
-  const user = req.query['user']
+  try {
+    const user = req.query['user']
 
-  if (!user || user === '') {
-    res.status(404).end()
-    return
+    if (!user || user === '') {
+      res.status(404).end()
+    }
+    else {
+      res.json({
+          user: user,
+          posts: await getActivities(user, 'posts'),
+          comments: await getActivities(user, 'comments')
+      })
+    }
+  } catch (e) {
+    res.status(500).send('здесь должно быть осмысленное сообщение об ошибке, но его нет')
   }
-
-  res.json({
-      user: user,
-      posts: await getActivities(user, 'posts'),
-      comments: await getActivities(user, 'comments')
-  })
 })
 
 module.exports = router
