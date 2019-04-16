@@ -2,11 +2,32 @@ $(() => {
   const domain = getParam('domain')
   const introRow = $('#intro')
   const inputRow = $('#input')
+  const recentElectionsRow = $('#recent-elections')
   const reportRow = $('#report')
 
   const onNoDomainSpecified = async () => {
     introRow.show()
     inputRow.show()
+    const votesResponse = await d3.json('/ajax/democracy/last-votes/')
+    const recentElections = new Set()
+    const now = Math.floor(new Date().getTime()/1000.0)
+    for (let i = 0; i < votesResponse.votes.length; i++) {
+      if (votesResponse.votes[i].created_at >= now - 86400) {
+        recentElections.add(votesResponse.votes[i].domain.url)
+      }
+    }
+    const recentElectionsList = $('#recent-elections-list')
+    if (recentElections.size > 0) {
+      recentElectionsRow.show()
+      recentElections.forEach(e => {
+        recentElectionsList
+          .append($('<li></li>'))
+            .append(
+              $(`<a>${e.replace('.d3.ru', '')}</a>`)
+                .attr('href', `/elections?domain=${e.replace('.d3.ru', '')}`))
+
+      })
+    }
   }
 
   const onDomainSpecified = async () => {
@@ -27,7 +48,7 @@ $(() => {
 
       offset = votesResponse.offset
 
-      if (votesResponse.votes.length === 0) {
+      if (votesResponse.votes.length === 0 || offset === null) {
         // TODO: написать что-нибудь
         need_a_break = true
       }
@@ -61,7 +82,6 @@ $(() => {
       if (a.to < b.to) {
         return -1
       }
-      // от меньшего к большему
       return a.created_at > b.created_at ? 1 : -1
     })
 

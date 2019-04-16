@@ -16,7 +16,11 @@ block content
       p Введите название сообщества, чтобы посмотреть последние результаты выборов на нем:
       input#domain-name-input(type='text')
       input#ok(type="submit", value="OK")
-      ul.list-unstyled#recent-elections
+  .row#recent-elections(style={ display: 'none' })
+    .col-md-12
+      br
+      p Кстати, сегодня выборы идут здесь:
+      ul.list-unstyled#recent-elections-list
   .row#report(style={ display: 'none' })
     .col-md-12
       h4#domain-name
