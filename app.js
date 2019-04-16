@@ -4,6 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const sassMiddleware = require('node-sass-middleware')
+const compression = require('compression')
 
 const indexRouter = require('./routes/index')
 const electionsRouter = require('./routes/elections')
@@ -28,6 +29,7 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
 }))
+app.use(compression())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
