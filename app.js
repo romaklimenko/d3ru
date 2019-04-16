@@ -9,7 +9,8 @@ const indexRouter = require('./routes/index')
 const electionsRouter = require('./routes/elections')
 const usersRouter = require('./routes/users')
 
-const lastVotesRouter = require('./routes/ajax/democracy/last-votes')
+const ajaxLastVotesRouter = require('./routes/ajax/democracy/last-votes')
+const apiUsers = require('./routes/api/users')
 
 const app = express()
 
@@ -33,7 +34,9 @@ app.use('/', indexRouter)
 app.use('/elections', electionsRouter)
 app.use('/users', usersRouter)
 
-app.use('/ajax/democracy/last-votes', lastVotesRouter)
+app.use('/ajax/democracy/last-votes', ajaxLastVotesRouter)
+
+app.use('/api/users', apiUsers)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
