@@ -12,13 +12,16 @@ $(() => {
 
   const onUserSpecified = async () => {
     statusRow.show()
-    reportRow.show()
 
     $('.user-name').text(user)
 
     const activitiesChart = $('svg#activities-chart')
     const sleepsChart = $('svg#sleeps-chart')
-    const width = activitiesChart.parent().width()
+
+    reportRow.show()
+    const width = Math.min(activitiesChart.parent().width(), 800)
+    reportRow.hide()
+
     activitiesChart.attr('width', width)
     sleepsChart.attr('width', width)
 
@@ -27,8 +30,6 @@ $(() => {
 
       $('.user-name').text(activities.user)
 
-      activities.posts = activities.posts.filter(p => p.created !== undefined)
-      activities.comments = activities.comments.filter(c => c.created !== undefined)
       activities.all = []
       activities.all.push(...activities.posts)
       activities.all.push(...activities.comments)
@@ -37,6 +38,7 @@ $(() => {
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
 
       statusRow.hide()
+      reportRow.show()
     }
     catch(error) {
       statusRow.text(error)
