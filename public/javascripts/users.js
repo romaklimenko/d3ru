@@ -23,7 +23,9 @@ $(() => {
     sleepsChart.attr('width', width)
 
     try {
-      const activities = await d3.json(`/api/users/?user=${user}`)
+      const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)
+
+      $('.user-name').text(activities.user)
 
       activities.posts = activities.posts.filter(p => p.created !== undefined)
       activities.comments = activities.comments.filter(c => c.created !== undefined)

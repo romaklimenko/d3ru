@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     const json = await response.json()
     res.json(json)
   } catch (e) {
+    console.error(e)
     res.status(500).send('здесь должно быть осмысленное сообщение об ошибке, но его нет')
   }
 })

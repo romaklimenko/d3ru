@@ -1,5 +1,13 @@
 $(() => {
-  const domain = getParam('domain')
+  const domain = function() {
+    let d = getParam('domain')
+    if (d) {
+      return d.toLowerCase()
+    }
+    else {
+      return null
+    }
+  }()
   const introRow = $('#intro')
   const inputRow = $('#input')
   const recentElectionsRow = $('#recent-elections')
@@ -122,7 +130,7 @@ $(() => {
     }
   })
 
-  ok.click(() => redirectToDomain)
+  ok.click(redirectToDomain)
 })
 
 function renderChart(votes, element) {
