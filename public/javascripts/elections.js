@@ -106,6 +106,11 @@ $(() => {
 
     renderChart(votes, document.getElementById('elections-chart'))
     renderLegend(votes)
+
+    if (votes.length > 0 &&
+      votes[votes.length - 1].created_at >= (Math.floor(new Date().getTime() / 1000.0) - 86400)) {
+      setTimeout(onDomainSpecified, 5 * 1000);
+    }
   }
 
   if (domain === null) {
@@ -150,7 +155,8 @@ function renderChart(votes, element) {
   votes.forEach(d => {
     const vote = {
       created_at: new Date(d.created_at * 1000),
-      vote: d.vote
+      vote: d.vote,
+      from: d.from
     }
     if (data[d.to] === undefined) {
       data[d.to] = [vote]
@@ -160,6 +166,8 @@ function renderChart(votes, element) {
     }
   })
 
+  element.innerHTML = ''
+
   const svg = d3.select(`#${element.id}`)
 
   const x = d3.scaleTime()
@@ -167,7 +175,7 @@ function renderChart(votes, element) {
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
-    .domain([0, d3.max(votes, d => d.vote)])
+    .domain([1, d3.max(votes, d => d.vote)])
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
@@ -195,6 +203,17 @@ function renderChart(votes, element) {
       .attr('stroke-width', 2)
       .attr('stroke', google10c(i))
       .attr('d', line)
+
+    data[d].forEach((_d, _i) => {
+      g.append('circle')
+        .attr('cx', x(_d.created_at))
+        .attr('cy', y(_d.vote))
+        .attr('r', 3)
+        .attr('stroke', google10c(i))
+        .attr('fill', '#FFF')
+          .append('title')
+            .text(_d.from + ' ' + _d.created_at)
+    })
   })
 }
 
@@ -211,5 +230,6 @@ function renderLegend(votes) {
     i++
   })
   const legend = document.getElementById('legend')
+  legend.innerHTML = ''
   legend.appendChild(p)
 }
