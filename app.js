@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const sassMiddleware = require('node-sass-middleware')
 const compression = require('compression')
+const forceHTTPS = require("expressjs-force-https").forceHTTPS
 
 const indexRouter = require('./routes/index')
 const electionsRouter = require('./routes/elections')
@@ -18,6 +19,10 @@ const app = express()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
+
+if (app.get('env') === 'production') {
+  app.use(forceHTTPS)
+}
 
 app.use(logger('dev'))
 app.use(express.json())
