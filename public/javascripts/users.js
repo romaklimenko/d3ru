@@ -65,7 +65,7 @@ $(() => {
     }
   })
 
-  ok.click(() => redirectToUser)
+  ok.click(redirectToUser)
 })
 
 function renderActivitiesChart(activities, element) {
