@@ -20,9 +20,9 @@ $(() => {
     inputRow.show()
     domainNameInput.focus()
 
-    const votesResponse = await d3.json('/ajax/democracy/last-votes/')
-    const recentElections = new Set()
     const now = Math.floor(new Date().getTime()/1000.0)
+    const votesResponse = await d3.json(`/ajax/democracy/last-votes/?cache=${now}`)
+    const recentElections = new Set()
     for (let i = 0; i < votesResponse.votes.length; i++) {
       if (votesResponse.votes[i].created_at >= now - 86400) {
         recentElections.add(votesResponse.votes[i].domain.url)
@@ -56,7 +56,8 @@ $(() => {
     let need_a_break = false
 
     while (!need_a_break) {
-      const votesResponse = await d3.json(`/ajax/democracy/last-votes/?domain=${domain}&offset=${offset}`)
+      const now = Math.floor(new Date().getTime()/1000.0)
+      const votesResponse = await d3.json(`/ajax/democracy/last-votes/?domain=${domain}&offset=${offset}&cache=${now}`)
 
       offset = votesResponse.offset
 

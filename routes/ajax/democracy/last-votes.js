@@ -14,6 +14,8 @@ router.get('/', async (req, res) => {
       }
     }
 
+    url.searchParams.set('cache', Math.floor(new Date().getTime()/1000.0))
+
     const response = await fetch(url)
     const json = await response.json()
     res.json(json)
