@@ -4,10 +4,13 @@ $(() => {
   const inputRow = $('#input')
   const statusRow = $('#status')
   const reportRow = $('#report')
+  const userNameInput = $('#user-name-input')
+  const ok = $('#ok')
 
   const onNoUserSpecified = async () => {
     introRow.show()
     inputRow.show()
+    userNameInput.focus()
   }
 
   const onUserSpecified = async () => {
@@ -51,9 +54,6 @@ $(() => {
   else {
     onUserSpecified()
   }
-
-  const userNameInput = $('#user-name-input')
-  const ok = $('#ok')
 
   const redirectToUser = () => {
     if (userNameInput.val().length > 0) {

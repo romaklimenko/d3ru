@@ -12,10 +12,14 @@ $(() => {
   const inputRow = $('#input')
   const recentElectionsRow = $('#recent-elections')
   const reportRow = $('#report')
+  const domainNameInput = $('#domain-name-input')
+  const ok = $('#ok')
 
   const onNoDomainSpecified = async () => {
     introRow.show()
     inputRow.show()
+    domainNameInput.focus()
+
     const votesResponse = await d3.json('/ajax/democracy/last-votes/')
     const recentElections = new Set()
     const now = Math.floor(new Date().getTime()/1000.0)
@@ -119,9 +123,6 @@ $(() => {
   else {
     onDomainSpecified()
   }
-
-  const domainNameInput = $('#domain-name-input')
-  const ok = $('#ok')
 
   const redirectToDomain = () => {
     if (domainNameInput.val().length > 0) {
