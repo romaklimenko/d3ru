@@ -113,7 +113,7 @@ $(() => {
     renderLegend(votes)
 
     if (votes.length > 0 &&
-      votes[votes.length - 1].created_at >= (Math.floor(new Date().getTime() / 1000.0) - 86400)) {
+      votes[0].created_at >= (Math.floor(new Date().getTime() / 1000.0) - 86400)) {
       setTimeout(onDomainSpecified, 5 * 1000);
     }
   }
