@@ -7,6 +7,21 @@ $(() => {
   const userNameInput = $('#user-name-input')
   const ok = $('#ok')
 
+  const groomActivities = activities => {
+    const groomActivity = activity => {
+      activity.datetime = new Date(activity.created * 1000)
+      const date = new Date(activity.datetime)
+      date.setHours(0, 0, 0)
+      activity.date = date
+      const time = new Date(1900, 0)
+      time.setHours(activity.datetime.getHours(), activity.datetime.getMinutes())
+      activity.time = time
+    }
+
+    activities.posts.forEach(groomActivity)
+    activities.comments.forEach(groomActivity)
+  }
+
   const onNoUserSpecified = async () => {
     introRow.show()
     inputRow.show()
@@ -33,9 +48,7 @@ $(() => {
 
       $('.user-name').text(activities.user)
 
-      activities.all = []
-      activities.all.push(...activities.posts)
-      activities.all.push(...activities.comments)
+      groomActivities(activities)
 
       renderActivitiesChart(activities, document.getElementById('activities-chart'))
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
@@ -45,6 +58,7 @@ $(() => {
     }
     catch(error) {
       statusRow.text(error)
+      throw error
     }
   }
 
@@ -70,6 +84,12 @@ $(() => {
   ok.click(redirectToUser)
 })
 
+function getAllActivities (activities) {
+  const data = activities.posts
+  data.push(...activities.comments)
+  return data
+}
+
 function renderActivitiesChart(activities, element) {
   const height = element.getAttribute('height')
   const width = element.getAttribute('width')
@@ -80,16 +100,7 @@ function renderActivitiesChart(activities, element) {
     left: 40
   }
 
-  const data = activities.all.map(a => {
-    const created = new Date(a.created * 1000)
-    const date = new Date(created)
-    date.setHours(0, 0, 0)
-    a.date = date
-    const time = new Date(1900, 0)
-    time.setHours(created.getHours(), created.getMinutes())
-    a.time = time
-    return a
-  })
+  const data = getAllActivities(activities)
 
   const svg = d3.select(element)
 
@@ -128,8 +139,8 @@ function renderActivitiesChart(activities, element) {
 }
 
 function renderSleepsChart(activities, element) {
-  activities.all.sort((a, b) => a.created > b.created ? 1 : -1)
-  const data = activities.all
+  const data = getAllActivities(activities)
+  data.sort((a, b) => a.created > b.created ? 1 : -1)
   const height = element.getAttribute('height')
   const width = element.getAttribute('width')
   const margin = {
