@@ -19,6 +19,18 @@ const app = express()
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
+// https
+if (process.env.NODE_ENV == 'production') {
+  app.use((req, res, next) => {
+      res.setHeader('Strict-Transport-Security', 'max-age=8640000; includeSubDomains')
+      if (req.headers['X-Forwarded-Proto'] && req.headers['X-Forwarded-Proto'] === "http") {
+        return res.redirect(301, 'https://' + req.host + req.url)
+      } else {
+        return next()
+      }
+  });
+}
+
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
