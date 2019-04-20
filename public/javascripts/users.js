@@ -52,6 +52,7 @@ $(() => {
 
       renderActivitiesChart(activities, document.getElementById('activities-chart'))
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
+      renderRatingChart(activities, document.getElementById('rating-chart'))
 
       statusRow.hide()
       reportRow.show()
@@ -85,7 +86,7 @@ $(() => {
 })
 
 function getAllActivities (activities) {
-  const data = activities.posts
+  const data = activities.posts.slice()
   data.push(...activities.comments)
   return data
 }
@@ -132,7 +133,7 @@ function renderActivitiesChart(activities, element) {
     .data(data)
     .enter()
     .append('circle')
-    .attr('cx', d => x(d.date))
+    .attr('cx', d => x(d.datetime))
     .attr('cy', d => y(d.time))
     .attr('fill', d => d.rating > 0 ? positive : (d.rating < 0 ? negative : neutral))
     .attr('r', d => d.rating == 0 ? 1 : 1.5)
@@ -273,4 +274,62 @@ function renderSleepsChart(activities, element) {
     })
     .attr('stroke', d => d.hours > 8 ? positive : (d.hours < 6 ? negative : neutral))
     .attr('stroke-width', d => d.hours > 8 ? 0.7 : (d.hours < 6 ? 2 : 1.5))
+}
+
+function renderRatingChart(activities, element) {
+  const data = getAllActivities(activities)
+  data.sort((a, b) => a.created > b.created ? 1 : -1)
+
+  data.forEach((d, i) => {
+    if (i === 0) {
+      d.cumulativeRating = d.rating
+    }
+    else {
+      d.cumulativeRating = data[i - 1].cumulativeRating + d.rating
+    }
+  })
+
+  const height = element.getAttribute('height')
+  const width = element.getAttribute('width')
+  const margin = {
+    top: 20,
+    right: 30,
+    bottom: 30,
+    left: 40
+  }
+
+  const svg = d3.select(element)
+
+  const x = d3.scaleTime()
+    .domain(d3.extent(data, d => d.datetime))
+    .range([margin.left, width - margin.right])
+
+  const y = d3.scaleLinear()
+    .domain(d3.extent(data, d => d.cumulativeRating))
+    .range([height - margin.bottom, margin.top])
+
+  const xAxis = g => g
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+
+  const yAxis = g => g
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y))
+
+  svg.append('g').call(xAxis)
+  svg.append('g').call(yAxis)
+
+  const positive = '#00C853'
+  const neutral = '#757575'
+  const negative = '#FF5722'
+
+  svg.append('g')
+    .selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', d => x(d.datetime))
+    .attr('cy', d => y(d.cumulativeRating))
+    .attr('fill', d => d.rating > 0 ? positive : (d.rating < 0 ? negative : neutral))
+    .attr('r', d => d.rating == 0 ? 1 : 1.5)
 }
