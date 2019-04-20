@@ -14,18 +14,25 @@ const activityMapper = a => {
   }
 }
 
-const getActivities = async (user, type) => {
-  const activities = []
-  let limit = -1
-
+const getCachedActivities = async (user) => {
   if (process.env.DIRTY_CACHE_URL) {
     const cache_url = new URL(process.env.DIRTY_CACHE_URL.replace('%username%', user.toLowerCase()))
     const cached_response = await fetch(cache_url)
     if (cached_response.status == 200) {
       const cached_response_json = await cached_response.json()
-      activities.push(...cached_response_json[type])
-      limit = cached_response_json.limit
+      return cached_response_json
     }
+    return null
+  }
+}
+
+const getActivities = async (user, type, cachedActivities) => {
+  const activities = []
+  let limit = -1
+
+  if (cachedActivities !== null) {
+    activities.push(...cachedActivities[type])
+    limit = cachedActivities.limit
   }
 
   let page = 1
@@ -49,9 +56,6 @@ const getActivities = async (user, type) => {
     if (response[type].length > 0 && response[type][0].user) {
       // TODO: плохо пахнет – нам нужно имя пользователя только чтобы проверить регистр
       user = response[type][0].user.login
-    }
-    else {
-      console.log(response[type][0])
     }
 
     const activities_to_push = response[type].map(activityMapper)
@@ -87,8 +91,9 @@ router.get('/', async (req, res) => {
       res.status(404).end()
     }
     else {
-      const posts = await getActivities(user, 'posts')
-      const comments = await getActivities(user, 'comments')
+      const cachedActivities = await getCachedActivities(user)
+      const posts = await getActivities(user, 'posts', cachedActivities)
+      const comments = await getActivities(user, 'comments', cachedActivities)
 
       if (posts.activities.length > 0) {
         user = posts.user
