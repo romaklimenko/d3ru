@@ -77,7 +77,7 @@ const getActivities = async (user, type) => {
   }
 }
 
-router.use(cache(60 * 60 * 24 * 1, 500))
+router.use(cache(60 * 60 * 24 * 1, 128))
 
 router.get('/', async (req, res) => {
   try {
