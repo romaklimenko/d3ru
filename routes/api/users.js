@@ -24,6 +24,14 @@ const getCachedActivities = async (user) => {
     }
     return null
   }
+  else {
+    return {
+      user: user,
+      posts: [],
+      comments: [],
+      limit: Math.floor(new Date().getTime() / 1000.0) - 86400 * 30
+    }
+  }
 }
 
 const getActivities = async (user, type, cachedActivities) => {
