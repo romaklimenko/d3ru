@@ -26,11 +26,11 @@ block content
         |
         span.user-name
         |. Зеленая – положительный рейтинг, красная – отрицательный, серая – 0:
-      svg#activities-chart(height=500,width=800)
+      svg#activities-chart.chart(height=500,width=800)
       p А здесь вы можете видеть когда пользователь недосыпал.
         |
         | Красные линии – меньше шести часов в сутки, оранжевые – меньше восьми:
-      svg#sleeps-chart(height=500,width=800)
+      svg#sleeps-chart.chart(height=500,width=800)
       p А это – кумулятивный рейтинг постов и комментариев
         |
         |
@@ -38,7 +38,7 @@ block content
         |
         |
         | по всем сообществам:
-      svg#rating-chart(height=500,width=800)
+      svg#rating-chart.chart(height=500,width=800)
 
 block script
   script(src="/javascripts/users.js")

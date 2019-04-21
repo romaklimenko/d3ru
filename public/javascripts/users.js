@@ -33,15 +33,11 @@ $(() => {
 
     $('.user-name').text(user)
 
-    const activitiesChart = $('svg#activities-chart')
-    const sleepsChart = $('svg#sleeps-chart')
-
     reportRow.show()
-    const width = Math.min(activitiesChart.parent().width(), 800)
+    const width = Math.min($('svg#activities-chart').parent().width(), 800)
     reportRow.hide()
 
-    activitiesChart.attr('width', width)
-    sleepsChart.attr('width', width)
+    $('svg.chart').attr('width', width)
 
     try {
       const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)

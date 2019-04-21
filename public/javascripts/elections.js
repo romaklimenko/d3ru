@@ -46,9 +46,8 @@ $(() => {
     reportRow.show()
     $('#domain-name').text(domain)
 
-    const electionsChart = $('svg#elections-chart')
-    const width = electionsChart.parent().width()
-    electionsChart.attr('width', width)
+    const width = $('svg#elections-chart').parent().width()
+    $('svg.chart').attr('width', width)
 
     let votes = []
     let offset = 0
