@@ -16,7 +16,7 @@ npm start
 
 Однако чтобы не перегружать сервер d3, рекомендуется кэшировать запросы к [Эй Пи Ай](https://d3.ru/api/docs/) (см. реализацию [routes/api/users.js](https://github.com/romaklimenko/d3ru/blob/master/routes/api/users.js)).
 
-Я сознательно стремился сделать приложение как можно более простым и без необязательных зависимостей: только [Express](https://expressjs.com) как коробки, [Bootstrap](https://getbootstrap.com), [jQuery](https://jquery.com) и [D3.js](https://d3js.org) на клиенте.
+Я сознательно стремился сделать приложение как можно более простым и без необязательных зависимостей: только [Express](https://expressjs.com), [Bootstrap](https://getbootstrap.com), [jQuery](https://jquery.com) и [D3.js](https://d3js.org) на клиенте.
 
 Если вы хотите добавить что-то новое или пофиксить баг, поговорите, пожалуйста, сначала со [мной](https://d3.ru/my/inbox/write/?to=romaklimenko) – я могу внести коррективы или не пропустить пулл-реквест, но вы всегда можете сделать форк и запустить сайт на своем хостинге или локально.
 
