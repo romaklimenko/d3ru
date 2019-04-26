@@ -34,7 +34,7 @@ $(() => {
     $('.user-name').text(user)
 
     reportRow.show()
-    const width = Math.min($('svg#activities-chart').parent().width(), 800)
+    const width = Math.min($('svg#activities-chart').parent().width(), 1000)
     reportRow.hide()
 
     $('svg.chart').attr('width', width)
@@ -94,7 +94,7 @@ function renderActivitiesChart(activities, element) {
     top: 20,
     right: 30,
     bottom: 30,
-    left: 40
+    left: 60
   }
 
   const data = getAllActivities(activities)
@@ -144,7 +144,7 @@ function renderSleepsChart(activities, element) {
     top: 20,
     right: 30,
     bottom: 30,
-    left: 40
+    left: 60
   }
 
   const svg = d3.select(element)
@@ -291,7 +291,7 @@ function renderRatingChart(activities, element) {
     top: 20,
     right: 30,
     bottom: 30,
-    left: 40
+    left: 60
   }
 
   const svg = d3.select(element)
@@ -305,7 +305,7 @@ function renderRatingChart(activities, element) {
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
-    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .attr('transform', `translate(0,${y(0)})`)
     .call(d3.axisBottom(x))
 
   const yAxis = g => g
