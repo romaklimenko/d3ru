@@ -6,12 +6,16 @@ const fetch = require('node-fetch')
 const cache = require('../../middleware/cache')
 
 const activityMapper = a => {
-  return {
+  const activity = {
     domain: a.domain ? a.domain.prefix : '',
     rating: a.rating ? a.rating : 0,
     created: a.created,
     id: a.id
   }
+  if (a.post !== undefined) {
+    activity.post_id = a.post.id
+  }
+  return activity
 }
 
 const getCachedActivities = async (user) => {
