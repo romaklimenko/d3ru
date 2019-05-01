@@ -6,10 +6,6 @@ const logger = require('morgan')
 const sassMiddleware = require('node-sass-middleware')
 const compression = require('compression')
 
-const indexRouter = require('./routes/index')
-const electionsRouter = require('./routes/elections')
-const usersRouter = require('./routes/users')
-
 const ajaxLastVotesRouter = require('./routes/ajax/democracy/last-votes')
 const apiUsers = require('./routes/api/users')
 
@@ -44,9 +40,9 @@ app.use(sassMiddleware({
 app.use(compression())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', indexRouter)
-app.use('/elections', electionsRouter)
-app.use('/users', usersRouter)
+app.get('/', (req, res) => res.render('index', {}))
+app.get('/elections', (req, res) => res.render('elections', {}))
+app.get('/users', (req, res) => res.render('users', {}))
 
 app.use('/ajax/democracy/last-votes', ajaxLastVotesRouter)
 
@@ -56,7 +52,7 @@ app.use('/api/users', apiUsers)
 app.use((req, res, next) => next(createError(404)))
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
