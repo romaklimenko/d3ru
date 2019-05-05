@@ -44,6 +44,7 @@ $(() => {
       const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)
 
       $('.user-name').html(`<a href="https://d3.ru/user/${activities.user}/" target="_blank">${activities.user}</a>`)
+      document.title = `${activities.user} - пользователь dirty`
 
       groomActivities(activities)
 
@@ -376,7 +377,8 @@ function renderTopActivities(activities) {
         posts[postId].link = json._links[1].href
         posts[postId].rating = json.rating
         posts[postId].title = json.title
-        posts[postId].post_id = json.id
+        posts[postId].post_id = json.id,
+        posts[postId].created = json.created
       }
 
       const keys = Object.keys(posts);
@@ -395,12 +397,13 @@ function renderTopActivities(activities) {
       const topActivities = $('#top-activities')
 
       const appendPost = p => {
+
         const post = posts[p.id]
         if (post === null) {
           return
         }
         topActivities.append(
-          `Пост "<a href="${post.link}" target="_blank">${getTitle(post)}</a>" на ${getDomain(p)} набрал ${post.rating}<br>`)
+          `Пост "<a href="${post.link}" target="_blank">${getTitle(post)}</a>" от ${new Date(post.created * 1000).toLocaleDateString()} на ${getDomain(p)} набрал ${post.rating}<br>`)
       }
 
       const appendComment = c => {
@@ -409,7 +412,7 @@ function renderTopActivities(activities) {
           return
         }
         topActivities.append(
-          `Комментарий в посте "<a href="${post.link}?filter=unread&sorting=rating#${c.id}" target="_blank">${getTitle(post)}</a>" на ${getDomain(c)} набрал ${c.rating}<br>`)
+          `Комментарий от ${new Date(c.created * 1000).toLocaleDateString()} в посте "<a href="${post.link}?filter=unread&sorting=rating#${c.id}" target="_blank">${getTitle(post)}</a>" на ${getDomain(c)} набрал ${c.rating}<br>`)
       }
 
       topActivities.append('<div><strong>Самые заплюсованные посты:</strong></div>')
