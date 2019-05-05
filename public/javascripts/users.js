@@ -49,6 +49,7 @@ $(() => {
       renderActivitiesChart(activities, document.getElementById('activities-chart'))
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
       renderRatingChart(activities, document.getElementById('rating-chart'))
+      renderTopActivities(activities)
 
       statusRow.hide()
       reportRow.show()
@@ -329,3 +330,121 @@ function renderRatingChart(activities, element) {
     .attr('fill', d => d.rating > 0 ? positive : (d.rating < 0 ? negative : neutral))
     .attr('r', d => d.rating == 0 ? 1 : 1.5)
 }
+
+function renderTopActivities(activities) {
+  const numberOfActivities = 10
+
+  const topDownwotedPosts = activities.posts
+    .filter(a => a.rating < 0)
+    .sort((a, b) => a.rating > b.rating ? 1 : -1)
+    .slice(0, numberOfActivities)
+
+  const topUpvotedPosts = activities.posts
+    .filter(a => a.rating > 0)
+    .sort((a, b) => a.rating < b.rating ? 1 : -1)
+    .slice(0, numberOfActivities)
+
+  const topDownvotedComments = activities.comments
+    .filter(a => a.rating < 0)
+    .sort((a, b) => a.rating > b.rating ? 1 : -1)
+    .slice(0, numberOfActivities)
+
+  const topUpvotedComments = activities.comments
+    .filter(a => a.rating > 0)
+    .sort((a, b) => a.rating < b.rating ? 1 : -1)
+    .slice(0, numberOfActivities)
+
+  const posts = {}
+
+  topUpvotedPosts.forEach(post => posts[post.id] = {})
+  topDownwotedPosts.forEach(post => posts[post.id] = {})
+  topUpvotedComments.forEach(comment => posts[comment.post_id] = {})
+  topDownvotedComments.forEach(comment => posts[comment.post_id] = {})
+
+  Object.keys(posts).forEach(postId => {
+    const url = `https://d3.ru/api/posts/${postId}/`
+    const xhr = createCORSRequest('GET', url);
+
+    xhr.onload = (progresEvent) => {
+      const json = JSON.parse(progresEvent.target.response)
+
+      console.log('json', json)
+      if (json === null) {
+        posts[postId] = null
+      }
+      else {
+        posts[postId].link = json._links[1].href
+        posts[postId].rating = json.rating
+        posts[postId].title = json.title
+        posts[postId].post_id = json.id
+      }
+
+      const keys = Object.keys(posts);
+      for (let i = 0; i < keys.length; i++) {
+        if (posts[keys[i]] === null) {
+          continue
+        }
+        if (posts[keys[i]].link === undefined) {
+          return
+        }
+      }
+
+      const getDomain = (a) => a.domain === '' ? 'd3.ru' : `${a.domain}.d3.ru`
+      const getTitle = (a) => a.title === '' ? `#${a.post_id}` : a.title
+
+      const topActivities = $('#top-activities')
+
+      const appendPost = p => {
+        const post = posts[p.id]
+        if (post === null) {
+          return
+        }
+        topActivities.append(
+          `Пост "<a href="${post.link}" target="_blank">${getTitle(post)}</a>" на ${getDomain(p)} набрал ${post.rating}<br>`)
+      }
+
+      const appendComment = c => {
+        const post = posts[c.post_id]
+        if (post === null) {
+          return
+        }
+        topActivities.append(
+          `Комментарий в посте "<a href="${post.link}?filter=unread&sorting=rating#${c.id}" target="_blank">${getTitle(post)}</a>" на ${getDomain(c)} набрал ${c.rating}<br>`)
+      }
+
+      topActivities.append('<div><strong>Самые заплюсованные посты:</strong></div>')
+      topUpvotedPosts.forEach(appendPost)
+
+      topActivities.append('<hr><div><strong>Самые заминусованные посты:</strong></div>')
+      topDownwotedPosts.forEach(appendPost)
+
+      topActivities.append('<hr><div><strong>Самые заплюсованные комментарии:</strong></div>')
+      topUpvotedComments.forEach(appendComment)
+
+      topActivities.append('<hr><div><strong>Самые заминусованные комментарии:</strong></div>')
+      topDownvotedComments.forEach(appendComment)
+
+      topActivities.append('<br>')
+    }
+
+    xhr.onerror = (error) => {
+      console.log(error)
+    }
+
+    xhr.send()
+  })
+
+function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ('withCredentials' in xhr) {
+    xhr.open(method, url, true);
+  } else if (typeof XDomainRequest !== 'undefined') {
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+  } else {
+    // CORS not supported.
+    console.log('CORS поломался (а раньше работал)')
+    xhr = null;
+  }
+  return xhr;
+}}
