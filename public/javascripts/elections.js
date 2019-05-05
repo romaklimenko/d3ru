@@ -127,7 +127,7 @@ $(() => {
 
   const redirectToDomain = () => {
     if (domainNameInput.val().length > 0) {
-      location.search = '?domain=' + domainNameInput.val()
+      location.search = '?domain=' + domainNameInput.val().trim()
     }
   }
 

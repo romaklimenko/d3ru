@@ -70,7 +70,7 @@ $(() => {
 
   const redirectToUser = () => {
     if (userNameInput.val().length > 0) {
-      location.search = '?user=' + userNameInput.val()
+      location.search = '?user=' + userNameInput.val().trim()
     }
   }
 
