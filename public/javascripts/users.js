@@ -29,6 +29,7 @@ $(() => {
   }
 
   const onUserSpecified = async () => {
+    document.title = `${user} - пользователь dirty`
     statusRow.show()
 
     $('.user-name').text(user)
@@ -368,7 +369,6 @@ function renderTopActivities(activities) {
     xhr.onload = (progresEvent) => {
       const json = JSON.parse(progresEvent.target.response)
 
-      console.log('json', json)
       if (json === null) {
         posts[postId] = null
       }

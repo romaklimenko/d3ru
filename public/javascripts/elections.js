@@ -43,6 +43,7 @@ $(() => {
   }
 
   const onDomainSpecified = async () => {
+    document.title = `${domain} - сообщество dirty`
     reportRow.show()
     $('#domain-name').text(domain)
 
