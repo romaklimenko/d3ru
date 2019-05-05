@@ -45,7 +45,7 @@ $(() => {
   const onDomainSpecified = async () => {
     document.title = `${domain} - сообщество dirty`
     reportRow.show()
-    $('#domain-name').text(domain)
+    $('#domain-name').html(`<a href="https://${domain}.d3.ru/" target="_blank">${domain}</a>`)
 
     const width = $('svg#elections-chart').parent().width()
     $('svg.chart').attr('width', width)

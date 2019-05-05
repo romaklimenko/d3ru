@@ -43,7 +43,7 @@ $(() => {
     try {
       const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)
 
-      $('.user-name').text(activities.user)
+      $('.user-name').html(`<a href="https://d3.ru/user/${activities.user}/" target="_blank">${activities.user}</a>`)
 
       groomActivities(activities)
 
