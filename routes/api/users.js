@@ -3,7 +3,7 @@ const router = express.Router()
 
 const fetch = require('node-fetch')
 
-const cache = require('../../middleware/cache')
+const cache = require('../../middlewares/cache')
 
 const activityMapper = a => {
   const activity = {
@@ -95,7 +95,7 @@ const getActivities = async (user, type, cachedActivities) => {
 
 router.use(cache(60 * 60 * 24 * 1, 128))
 
-router.get('/', async (req, res) => {
+router.get('/users', async (req, res) => {
   try {
     let user = req.query['user']
 

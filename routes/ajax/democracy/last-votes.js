@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 const express = require('express')
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/democracy/last-votes', async (req, res) => {
   try {
     const url = new URL('https://d3.ru/ajax/democracy/last-votes/')
 
