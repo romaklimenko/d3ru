@@ -28,8 +28,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => res.render('index', {}))
 app.get('/elections', (req, res) => res.render('elections', {}))
-app.get('/users/compare', (req, res) => res.render('users/compare', {}))
-app.get('/users', (req, res) => res.render('users', {}))
+app.get('/user', (req, res) => res.render('user', {}))
+app.get('/users', (req, res) => {
+  // избегаем breaking changes: /users?user=romaklimenko редиректится на /user?user=romaklimenko
+  if (req.query.user) {
+    res.redirect(req.url.replace('/users', '/user'))
+  }
+  else {
+    res.render('users', {})
+  }
+})
 
 app.use('/ajax', require('./routes/ajax'))
 app.use('/api', require('./routes/api'))

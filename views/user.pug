@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  include includes/navigation.pug
+  .row#intro(style={ display: 'none' })
+    .col-md-12
+      h3 Пользователи
+
+  .row#input(style={ display: 'none' })
+    .col-md-12
+      p Введите имя пользователя:
+      input#user-name-input(type='text')
+      input#ok(type="submit", value="OK")
+  include includes/status.pug
+  .row#report(style={ display: 'none' })
+    .col-md-12
+      h4.user-name
+      p Каждая точка – пост или комментарий пользователя
+        |
+        |
+        span.user-name
+        |. Зеленая – положительный рейтинг, красная – отрицательный, серая – 0:
+      svg#activities-chart.chart(height=500,width=800)
+      p А здесь вы можете видеть когда пользователь недосыпал.
+        |
+        | Красные линии – меньше шести часов в сутки, оранжевые – меньше восьми:
+      svg#sleeps-chart.chart(height=500,width=800)
+      p А это – кумулятивный рейтинг постов и комментариев
+        |
+        |
+        span.user-name
+        |
+        |
+        | по всем сообществам:
+      svg#rating-chart.chart(height=500,width=800)
+
+      #top-activities
+
+block script
+  script(src="/javascripts/user.js")
