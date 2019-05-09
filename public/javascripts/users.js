@@ -36,6 +36,7 @@ $(() => {
 
     reportRow.show()
     const width = Math.min($('svg.chart').parent().width(), 1000)
+    $('svg.chart').attr('height', Math.min(500, width / 4 * 3))
     reportRow.hide()
 
     $('svg.chart').attr('width', width)

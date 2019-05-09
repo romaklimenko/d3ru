@@ -39,6 +39,7 @@ $(() => {
     reportRow.hide()
 
     $('svg.chart').attr('width', width)
+    $('svg.chart').attr('height', Math.min(500, width / 4 * 3))
 
     try {
       const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)

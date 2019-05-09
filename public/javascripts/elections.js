@@ -49,6 +49,7 @@ $(() => {
 
     const width = $('svg#elections-chart').parent().width()
     $('svg.chart').attr('width', width)
+    $('svg.chart').attr('height', Math.min(500, width / 4 * 3))
 
     let votes = []
     let offset = 0
