@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  include ../includes/navigation.pug
+  .row#intro(style={ display: 'none' })
+    .col-md-12
+      h3 Сравнение активностей пользователей
+
+  .row#input(style={ display: 'none' })
+    .col-md-12
+      p Сюда введите имена пользователей через запятую:
+      input#user-names-input(type='text')
+      input#ok(type="submit", value="OK")
+  include ../includes/status.pug
+  .row#report(style={ display: 'none' })
+    .col-md-12
+      h4.user-names
+      svg#compare-chart.chart(height=500,width=800)
+      p Посты и комментарии пользователей
+        |
+        |
+        span.user-names
+        |
+        | по дате и времени суток.
+
+block script
+  script(src="/javascripts/users/compare.js")

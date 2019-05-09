@@ -8,16 +8,17 @@ block content
 
   .row#input(style={ display: 'none' })
     .col-md-12
-      p Сюда введите имя пользователя:
+      p Введите имя пользователя:
       input#user-name-input(type='text')
       input#ok(type="submit", value="OK")
-      ul.list-unstyled#recent-elections
-  .row#status(style={ display: 'none' })
-    .col-md-12
-      p Откиньтесь на спинку кресла: если запрос не закэширован,
+      br
+      br
+      p Кстати, если хотите сравнить нескольких пользователей, то вам
         |
-        | то придется немного подождать.
-      img(src='/images/hypnotoad.gif')
+        |
+        a(href='/users/compare') сюда
+        |.
+  include includes/status.pug
   .row#report(style={ display: 'none' })
     .col-md-12
       h4.user-name

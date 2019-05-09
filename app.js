@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => res.render('index', {}))
 app.get('/elections', (req, res) => res.render('elections', {}))
+app.get('/users/compare', (req, res) => res.render('users/compare', {}))
 app.get('/users', (req, res) => res.render('users', {}))
 
 app.use('/ajax', require('./routes/ajax'))
