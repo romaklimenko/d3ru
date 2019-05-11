@@ -1,25 +1,38 @@
 extends layout
 
 block content
-  include includes/navigation.pug
+  .navigation(style={position: 'relative', top: '-35px' })
+    a(href='/') ГЛАВНАЯ
   .row
     .col-md-12
-      h3 Привет!
-      p Здесь вы можете обнаружить интересные отчеты о
+      p Привет! Здесь вы можете обнаружить интересные отчеты о
         |
         |
         a(href='https://d3.ru/', target='_blank') d3.ru
         |
-        | –
+        | – организованном сообществе людей:
+
+        ul
+          li
+            a(href='/user') Отчеты об одном пользователе
+          li
+            a(href='/users') Сравнение пользователей
+          li
+            a(href='/elections') Выборы в сообществах
+      p
+        | Ещё больше отчетов вы можете найти в сообществе
         |
-        a(href='https://d3.ru/about/', target='_blank') организованном сообществе людей
+        a(href='https://dataisbeautiful.d3.ru/', target='_blank') dataisbeautiful
+        |. Код этого сайта находится на
+        |
+        a(href='https://github.com/romaklimenko/d3ru/', target='_blank') ГитХабе.
+        |
+        | Пишите автору в
+        |
+        a(href='https://d3.ru/my/inbox/write/?to=romaklimenko', target='_blank') инбокс
+        |
+        | или на
+        |
+        a(href='mailto:romaklimenko@gmail.com') почту
         |.
-        br
-        | Подписывайтесь на
-        |
-        a(href='https://dataisbeautiful.d3.ru/', target='_blank') dataisbeautiful.d3.ru
-        |, присылайте свои
-        |
-        a(href='https://github.com/romaklimenko/d3ru/', target='_blank') пулл-реквесты
-        |
-        | и идеи.
+

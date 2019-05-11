@@ -26,16 +26,16 @@ app.use(require('node-sass-middleware')({
 app.use(require('compression')())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', (req, res) => res.render('index', {}))
-app.get('/elections', (req, res) => res.render('elections', {}))
-app.get('/user', (req, res) => res.render('user', {}))
+app.get('/', (req, res) => res.render('index', { title: 'dirty' }))
+app.get('/elections', (req, res) => res.render('elections', { title: 'dirty - выборы' }))
+app.get('/user', (req, res) => res.render('user', { title: 'dirty - пользователь' }))
 app.get('/users', (req, res) => {
   // избегаем breaking changes: /users?user=romaklimenko редиректится на /user?user=romaklimenko
   if (req.query.user) {
     res.redirect(req.url.replace('/users', '/user'))
   }
   else {
-    res.render('users', {})
+    res.render('users', { title: 'dirty - сравнение пользователей' })
   }
 })
 

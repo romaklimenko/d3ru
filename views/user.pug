@@ -1,11 +1,12 @@
 extends layout
 
 block content
-  include includes/navigation.pug
-  .row#intro(style={ display: 'none' })
-    .col-md-12
-      h3 Пользователи
-
+  .navigation(style={position: 'relative', top: '-35px' })
+    a(href='/') ГЛАВНАЯ
+    |
+    | &rarr;
+    |
+    a(href='/user') ПОЛЬЗОВАТЕЛЬ
   .row#input(style={ display: 'none' })
     .col-md-12
       p Введите имя пользователя:

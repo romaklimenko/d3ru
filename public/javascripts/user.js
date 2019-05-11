@@ -1,6 +1,5 @@
 $(() => {
   const user = getParam('user')
-  const introRow = $('#intro')
   const inputRow = $('#input')
   const statusRow = $('#status')
   const reportRow = $('#report')
@@ -23,7 +22,6 @@ $(() => {
   }
 
   const onNoUserSpecified = async () => {
-    introRow.show()
     inputRow.show()
     userNameInput.focus()
   }

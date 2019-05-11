@@ -1,7 +1,12 @@
 extends layout
 
 block content
-  include includes/navigation.pug
+  .navigation
+    a(href='/') ГЛАВНАЯ
+    |
+    | &rarr;
+    |
+    a(href='/elections') ВЫБОРЫ
   .row#intro(style={ display: 'none' })
     .col-md-12
       h3 Выборы
