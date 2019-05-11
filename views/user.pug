@@ -55,7 +55,18 @@ block content
       hr
 
       strong Суммарный рейтинг постов и комментариев пользователя по сообществам:
-      ul.list-unstyled#rating-report
+      br
+      .table-responsive
+        table#rating-table
+          thead
+            tr
+              th(scope='col') Сообщество
+              th(scope='col') Количество
+              th(scope='col') Рейтинг
+              th(scope='col') Средний рейтинг
+          tbody#rating-report
 
 block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.13/js/dataTables.bootstrap4.min.js")
   script(src="/javascripts/user.js")

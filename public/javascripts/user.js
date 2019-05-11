@@ -561,11 +561,18 @@ function renderRating(activities) {
       const domainUrl = d.domain === '' ? 'https://d3.ru' : `https://${d.domain}.d3.ru/`
       const domainName = d.domain === '' ? 'd3' : `${d.domain}`
       list.append(
-        `<li>
-            В сообществе <a href="${domainUrl}" target="_blank">${domainName}</a>
-            оставлено <strong>${d.count}</strong> записей,
-            суммарный рейтинг которых <strong>${d.rating}</strong>,
-            а среднее значение <strong>${Math.floor((d.rating / d.count) * 100) / 100}</strong>
-        </li>`)
+        `<tr>
+            <td><a href="${domainUrl}" target="_blank">${domainName}</a></td>
+            <td>${d.count}</td>
+            <td>${d.rating}</td>
+            <td>${Math.floor((d.rating / d.count) * 100) / 100}</td>
+        </tr>`)
+    })
+
+    $('#rating-table').DataTable({
+      searching: false,
+      paging: false,
+      info: false,
+      order: [[2, 'desc']]
     })
 }
