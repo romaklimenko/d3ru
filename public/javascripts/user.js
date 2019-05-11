@@ -37,6 +37,7 @@ $(() => {
     reportRow.hide()
 
     $('svg.chart').attr('width', width)
+    $('svg#weekdays-chart').attr('width', width)
     $('svg.chart').attr('height', Math.min(500, width / 4 * 3))
 
     try {
@@ -48,6 +49,7 @@ $(() => {
       groomActivities(activities)
 
       renderActivitiesChart(activities, document.getElementById('activities-chart'))
+      renderWeekdaysChart(activities, document.getElementById('weekdays-chart'), document.getElementById('weekdays-report'))
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
       renderRatingChart(activities, document.getElementById('rating-chart'))
       renderTopActivities(activities)
@@ -135,6 +137,82 @@ function renderActivitiesChart(activities, element) {
     .attr('cy', d => y(d.time))
     .attr('fill', d => d.rating > 0 ? positive : (d.rating < 0 ? negative : neutral))
     .attr('r', d => d.rating == 0 ? 1 : 1.5)
+}
+
+function renderWeekdaysChart(activities, chartElement, reportElement) {
+  const height = chartElement.getAttribute('height')
+  const width = chartElement.getAttribute('width')
+  const margin = {
+    top: 20,
+    right: 30,
+    bottom: 30,
+    left: 60
+  }
+
+  const dict = {}
+
+  const allActivities = getAllActivities(activities)
+
+  allActivities.forEach(a => {
+    const key = a.date.toISOString()
+    if (dict[key]) {
+      dict[key].count++,
+      dict[key].from = Math.min(dict[key].from, a.created)
+      dict[key].to = Math.max(dict[key].to, a.created)
+    }
+    else {
+      dict[key] = {
+        date: a.date,
+        count: 1,
+        from: a.created,
+        to: a.created
+      }
+    }
+  })
+
+  const data = Object.keys(dict).map(key => dict[key])
+
+  const svg = d3.select(chartElement)
+
+  const x = d3.scaleTime()
+    .domain(d3.extent(data, d => d.date))
+    .range([margin.left, width - margin.right])
+
+  const y = d3.scaleLinear()
+    .domain(d3.extent([0, d3.max(data, d => d.count)]))
+    .range([height - margin.bottom, margin.top])
+
+  const xAxis = g => g
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+
+  const yAxis = g => g
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y))
+
+  svg.append('g').call(xAxis)
+  svg.append('g').call(yAxis)
+
+  const days = (d3.max(allActivities, d => d.created) - d3.min(allActivities, d => d.created)) / 86400
+  const strokeWidth = Math.max((width - margin.left - margin.right) / days, .5)
+
+  svg.append('g')
+    .selectAll('line')
+    .data(data)
+    .enter()
+    .append('line')
+    .attr('x1', d => x(d.date))
+    .attr('y1', d => y(d.count))
+    .attr('x2', d => x(d.date))
+    .attr('y2', d => y(0))
+    .attr('stroke', d => (d.date.getDay() === 0 || d.date.getDay() == 6) ? 'red' : 'black')
+    .attr('stroke-width', strokeWidth)
+
+  const top = data.map(d => d).sort((a, b) => a.count > b.count ? -1 : 1).slice(0, 10)
+  const list = $(reportElement)
+  top.forEach(d => {
+    list.append(`<li><strong>${d.date.toLocaleDateString()}</strong> было написано <strong>${d.count}</strong> <a href="https://d3.ru/search/?author=${activities.user}&date_start=${d.from - 1000}&date_end=${d.to + 1000}&sort=date" target="_blank">записей</a>.</li>`)
+  })
 }
 
 function renderSleepsChart(activities, element) {
