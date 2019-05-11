@@ -212,7 +212,7 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
   const top = data.map(d => d).sort((a, b) => a.count > b.count ? -1 : 1).slice(0, 10)
   const list = $(reportElement)
   top.forEach(d => {
-    list.append(`<li><strong>${d.date.toLocaleDateString()}</strong> было написано <strong>${d.count}</strong> <a href="https://d3.ru/search/?author=${activities.user}&date_start=${d.from - 1000}&date_end=${d.to + 1000}&sort=date" target="_blank">записей</a>.</li>`)
+    list.append(`<li><strong>${d.date.toLocaleDateString()}</strong> было написано <strong>${d.count}</strong> <a href="https://d3.ru/search/?author=${activities.user}&date_start=${d.from - 1000}&date_end=${d.to + 1000}&sort=date" target="_blank">записей</a></li>`)
   })
 }
 
@@ -563,9 +563,9 @@ function renderRating(activities) {
       list.append(
         `<li>
             В сообществе <a href="${domainUrl}" target="_blank">${domainName}</a>
-            оставлено <strong>${d.count}</strong> записей
-            суммарный рейтинг которых <strong>${d.rating}</strong>
-            (среднее значение: <strong>${Math.floor((d.rating / d.count) * 100) / 100}</strong>)
+            оставлено <strong>${d.count}</strong> записей,
+            суммарный рейтинг которых <strong>${d.rating}</strong>,
+            а среднее значение <strong>${Math.floor((d.rating / d.count) * 100) / 100}</strong>
         </li>`)
     })
 }
