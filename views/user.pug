@@ -33,7 +33,7 @@ block content
         |
         span.user-name
         |
-        | в самые активные дни:
+        | в свои самые активные дни:
       ul.list-unstyled#weekdays-report
 
       p А здесь можно увидеть когда пользователь недосыпал.
@@ -51,6 +51,11 @@ block content
       svg#rating-chart.chart(height=500,width=800)
 
       #top-activities
+
+      hr
+
+      strong Суммарный рейтинг постов и комментариев пользователя по сообществам:
+      ul.list-unstyled#rating-report
 
 block script
   script(src="/javascripts/user.js")

@@ -53,6 +53,7 @@ $(() => {
       renderSleepsChart(activities, document.getElementById('sleeps-chart'))
       renderRatingChart(activities, document.getElementById('rating-chart'))
       renderTopActivities(activities)
+      renderRating(activities)
 
       statusRow.hide()
       reportRow.show()
@@ -528,3 +529,43 @@ function createCORSRequest(method, url) {
   }
   return xhr;
 }}
+
+function renderRating(activities) {
+  const list = $('#rating-report')
+  const rating = {}
+  getAllActivities(activities).forEach(a => {
+    if (rating[a.domain]) {
+      rating[a.domain].rating += a.rating
+      rating[a.domain].count++
+    }
+    else {
+      rating[a.domain] = {
+        rating: a.rating,
+        count: 1
+      }
+    }
+  })
+
+  Object.keys(rating)
+    .map(key => {
+      return {
+        domain: key,
+        rating: rating[key].rating,
+        count: rating[key].count
+      }
+    })
+    .sort((a, b) => {
+      return a.rating > b.rating ? -1 : 1
+    })
+    .forEach(d => {
+      const domainUrl = d.domain === '' ? 'https://d3.ru' : `https://${d.domain}.d3.ru/`
+      const domainName = d.domain === '' ? 'd3' : `${d.domain}`
+      list.append(
+        `<li>
+            В сообществе <a href="${domainUrl}" target="_blank">${domainName}</a>
+            оставлено <strong>${d.count}</strong> записей
+            суммарный рейтинг которых <strong>${d.rating}</strong>
+            (среднее значение: <strong>${Math.floor((d.rating / d.count) * 100) / 100}</strong>)
+        </li>`)
+    })
+}
