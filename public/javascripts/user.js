@@ -154,6 +154,10 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
 
   const allActivities = getAllActivities(activities)
 
+  if (allActivities.length === 0) {
+    return
+  }
+
   allActivities.forEach(a => {
     const key = a.date.toISOString()
     if (dict[key]) {
@@ -191,11 +195,13 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
     .attr('transform', `translate(${margin.left},0)`)
     .call(d3.axisLeft(y))
 
+  const yAxisRight = g => g
+    .attr('transform', `translate(${width - margin.right},0)`)
+    .call(d3.axisRight(y))
+
   svg.append('g').call(xAxis)
   svg.append('g').call(yAxis)
-
-  const days = (d3.max(allActivities, d => d.created) - d3.min(allActivities, d => d.created)) / 86400
-  const strokeWidth = Math.max((width - margin.left - margin.right) / days, .5)
+  svg.append('g').call(yAxisRight)
 
   svg.append('g')
     .selectAll('line')
@@ -207,13 +213,66 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
     .attr('x2', d => x(d.date))
     .attr('y2', d => y(0))
     .attr('stroke', d => (d.date.getDay() === 0 || d.date.getDay() == 6) ? 'red' : 'black')
-    .attr('stroke-width', strokeWidth)
+    .attr('stroke-width', 1)
+    .attr('opacity', .5)
 
   const top = data.map(d => d).sort((a, b) => a.count > b.count ? -1 : 1).slice(0, 10)
   const list = $(reportElement)
   top.forEach(d => {
-    list.append(`<li><strong>${d.date.toLocaleDateString()}</strong> было написано <strong>${d.count}</strong> <a href="https://d3.ru/search/?author=${activities.user}&date_start=${d.from - 1000}&date_end=${d.to + 1000}&sort=date" target="_blank">записей</a></li>`)
+    list.append(`<li>
+        <strong>${d.date.toLocaleDateString()}</strong> было написано <strong>${d.count}</strong>
+        <a href="https://d3.ru/search/?author=${activities.user}&date_start=${d.from - 1000}&date_end=${d.to + 1000}&sort=date" target="_blank">записей</a>
+      </li>`)
   })
+
+  // trendline
+  const min_created = d3.min(allActivities, d => d.created)
+  const now_created = Math.floor(new Date().getTime() / 1000.0) + 86400
+  let current_created = min_created
+
+  while (current_created <= now_created) {
+    const date = new Date(new Date(current_created * 1000).setHours(0, 0, 0, 0))
+    const key = date.toISOString()
+    if (!dict[key]) {
+      dict[key] = {
+        date: date,
+        count: 0
+      }
+    }
+    current_created += 86400
+  }
+
+  const filled_data = Object.keys(dict)
+    .map(key => dict[key])
+    .sort((a, b) => a.date > b.date ? 1 : -1)
+
+  const window_size = 30
+
+  // это место очевидно можно ускорить
+  filled_data.forEach((day, i) => {
+    if (i < window_size - 1) {
+      day.mean = d3.sum(filled_data.slice(0, i), d => d.count) / window_size
+      return
+    }
+    const from = i - window_size + 1
+    const to = from + window_size
+    const window = filled_data.slice(from, to)
+    day.mean = d3.sum(window, d => d.count) / window_size
+  })
+
+  const line = d3.line()
+    .x(d => x(d.date))
+    .y(d => y(d.mean))
+    .curve(d3.curveMonotoneX)
+
+  svg
+    .append('g')
+    .append('path')
+    .datum(filled_data)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke', 'red')
+    .attr('d', line)
 }
 
 function renderSleepsChart(activities, element) {
