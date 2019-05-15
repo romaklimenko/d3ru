@@ -93,7 +93,7 @@ const getActivities = async (user, type, cachedActivities) => {
   }
 }
 
-router.use(cache(60 * 60 * 24 * 1, 128))
+router.use(cache(process.env.CACHE_DURATION_IN_SEC || 60 * 60 * 24 * 1, 128))
 
 router.get('/users', async (req, res) => {
   try {
