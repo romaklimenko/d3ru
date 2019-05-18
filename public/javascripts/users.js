@@ -159,7 +159,7 @@ function render(activities, element) {
     svg.append('g').call(xAxis)
     svg.append('g').call(yAxis)
 
-    const opacity = .5
+    const opacity = .75
     const radius = 1.5
 
     data.forEach(user => {
