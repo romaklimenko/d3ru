@@ -1,5 +1,7 @@
 $(() => {
   const user = getParam('user')
+  const from = getParam('from')
+  const to = getParam('to')
   const inputRow = $('#input')
   const statusRow = $('#status')
   const reportRow = $('#report')
@@ -42,6 +44,15 @@ $(() => {
 
     try {
       const activities = await d3.json(`/api/users/?user=${user.toLowerCase()}`)
+
+      if (from) {
+        activities.posts = activities.posts.filter(d => d.created >= from)
+        activities.comments = activities.comments.filter(d => d.created >= from)
+      }
+      if (to) {
+        activities.posts = activities.posts.filter(d => d.created <= to)
+        activities.comments = activities.comments.filter(d => d.created <= to)
+      }
 
       $('.user-name').html(`<a href="https://d3.ru/user/${activities.user}/" target="_blank">${activities.user}</a>`)
       document.title = `${activities.user} - пользователь dirty`
