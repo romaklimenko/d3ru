@@ -70,6 +70,20 @@ block content
               th(scope='col') Средний рейтинг
           tbody#rating-report
 
+      hr
+
+      p
+        strong
+          | Изменение кармы пользователя (отчет доступен только для
+          |
+          a(href='/tokens') золотых
+          |
+          | пользователей):
+      svg#karma-chart(height=500,width=800)
+
+      dl#karma-log
+
+
 block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.13/js/dataTables.bootstrap4.min.js")

@@ -65,6 +65,7 @@ $(() => {
       renderRatingChart(activities, document.getElementById('rating-chart'))
       renderTopActivities(activities)
       renderRating(activities)
+      renderKarma(user, document.getElementById('karma-chart'))
 
       statusRow.hide()
       reportRow.show()
@@ -647,4 +648,152 @@ function renderRating(activities) {
       info: false,
       order: [[2, 'desc']]
     })
+}
+
+async function renderKarma(user, element) {
+  const data = []
+  let page = 1
+  let page_count = 1
+
+  const uid = localStorage.getItem('uid')
+  const sid = localStorage.getItem('sid')
+
+  if (!uid || !sid) {
+    return
+  }
+
+  const params = {
+    method: 'GET',
+    headers: {
+      'X-Futuware-UID': uid,
+      'X-Futuware-SID': sid
+    }
+  }
+
+  while (page <= page_count) {
+    const response = await fetch(`https://d3.ru/api/users/${user}/votes/?page=${page}&per_page=210`, params)
+    const result = await response.json()
+
+    if (result === null) {
+      return
+    }
+
+    if (result.page_count) {
+      page_count = result.page_count
+    }
+
+    if (result.upvotes) {
+      data.push(...result.upvotes)
+    }
+
+    if (result.downvotes) {
+      data.push(...result.downvotes)
+    }
+
+    page++
+  }
+
+  data.sort((a, b) => a.changed > b.changed ? 1 : -1)
+
+  data.forEach((v, i) => {
+    if (i === 0) {
+      v.karma = v.vote
+    }
+    else {
+      v.karma = data[i - 1].karma + v.vote
+    }
+    v.datetime = new Date(v.changed * 1000)
+  })
+
+  console.log('karma', data)
+
+  const height = element.getAttribute('height')
+  const width = element.getAttribute('width')
+  const margin = {
+    top: 20,
+    right: 30,
+    bottom: 30,
+    left: 60
+  }
+
+  const svg = d3.select(element)
+
+  const x = d3.scaleTime()
+    .domain(d3.extent(data, d => d.datetime))
+    .range([margin.left, width - margin.right])
+
+  const y = d3.scaleLinear()
+    .domain(d3.extent(data, d => d.karma))
+    .range([height - margin.bottom, margin.top])
+
+  const xAxis = g => g
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+
+  const yAxis = g => g
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y))
+
+  svg.append('g').call(xAxis)
+  svg.append('g').call(yAxis)
+
+  svg.append('line')
+    .attr('x1', x(d3.min(data, d => d.datetime)))
+    .attr('x2', x(d3.max(data, d => d.datetime)))
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke', '#000')
+    .attr('stroke-width', .75)
+
+  const positive = '#00C853'
+  const negative = '#FF5722'
+
+  svg.append('g')
+    .selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', d => x(d.datetime))
+    .attr('cy', d => y(d.karma))
+    .attr('fill', d => d.vote > 0 ? positive : negative)
+    .attr('r', d => Math.abs(d.vote) === 1 ? 1 : 1.5)
+
+  const by_date = {}
+
+  for (let i = data.length; i--;) {
+    const vote = data[i]
+    const key = vote.datetime.toISOString().substring(0, 10)
+    if (by_date[key] === undefined) {
+      by_date[key] = {
+        votes: [vote],
+        up: Math.max(0, vote.vote),
+        down: Math.min(vote.vote, 0)
+      }
+    }
+    else {
+      by_date[key].votes.push(vote),
+      by_date[key].up += Math.max(0, vote.vote)
+      by_date[key].down += Math.min(vote.vote, 0)
+    }
+  }
+
+  console.log('by_date', by_date)
+
+  const keys = Object.keys(by_date)
+
+  const log = $('#karma-log')
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const date = by_date[key]
+    const delta = date.up + date.down
+    let delta_color = '#000'
+    if (delta > 0) delta_color = positive
+    if (delta < 0) delta_color = negative
+    log.append(`<strong>${key} (<span style="color:${date.up === 0 ? '#000' : positive}">+${date.up}</span>&#09;<span style="color:${date.down === 0 ? '#000' : negative}">-${Math.abs(date.down)}</span>&#09;&rarr; <span style="color:${delta_color}">${(delta) >= 0 ? '+' : ''}${delta}</span>):</strong>`)
+
+    for (let j = 0; j < date.votes.length; j++) {
+      log.append(`<div>&nbsp;<span style="color:${date.votes[j].vote > 0 ? positive : negative}">${date.votes[j].vote > 0 ? '+' : ''}${date.votes[j].vote}</span>&#09;${date.votes[j].datetime.toISOString().substring(11, 19)}&#09;<a href="https://d3.ru/user/${date.votes[j].user.login}/" target="_blank">${date.votes[j].user.login}</a></div>`)
+    }
+  }
 }
