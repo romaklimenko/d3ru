@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  .navigation(style={position: 'relative', top: '-35px' })
+    a(href='/') ГЛАВНАЯ
+    |
+    | &rarr;
+    |
+    a(href='/notes') ЗАМЕТКИ
+  .row
+    .col-md-12
+      p
+        | Хотите увидеть всё, что в вашем профиле о вас пишут другие пользователи?
+        | Это просто: вам нужны золотой аккаунт и настроенный
+        |
+        a(href='/tokens') доступ
+        |.
+    .col-md-12
+      ul.list-unstyled#notes
+
+block script
+  script(src='/javascripts/notes.js')

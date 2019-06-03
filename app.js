@@ -40,6 +40,8 @@ app.get('/users', (req, res) => {
   }
 })
 
+app.get('/notes', (req, res) => res.render('notes', { title: 'dirty - заметки' }))
+
 app.use('/ajax', require('./routes/ajax'))
 app.use('/api', require('./routes/api'))
 

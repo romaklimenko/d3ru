@@ -282,11 +282,13 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
     .append('path')
     .datum(filled_data)
     .attr('fill', 'none')
-    .attr('stroke-width', 2)
+    .attr('stroke-width', 1)
     .attr('stroke', 'red')
     .attr('d', line)
 
   $('#weekdays-chart').after(`<p>Сейчас среднее количество записей пользователя за последние ${window_size} дней равно <strong>${filled_data[filled_data.length - 1].mean}</strong> записей в день.</p>`)
+
+  console.log('weekdays', filled_data)
 }
 
 function renderSleepsChart(activities, element) {
