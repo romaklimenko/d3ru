@@ -26,7 +26,7 @@ async function render(uid, sid, username) {
 
   while (page <= page_count) {
     const response = await fetch(
-      `https://d3.ru/api/user_notes/?user_login=${username.toLowerCase().trim()}&page=${page}`, params)
+      `https://d3.ru/api/user_notes/?user_login=${username.trim()}&page=${page}`, params)
 
     if (!response.ok) {
       $('#notes').append(`${response.status}: ${response.statusText}`)
