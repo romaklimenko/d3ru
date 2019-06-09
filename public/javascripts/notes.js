@@ -53,6 +53,6 @@ async function render(uid, sid, username) {
   notes.append(`<p>Привет, <a href="https://d3.ru/user/${username}/" target="_blank">${username}</a>! Про вас пишут следующее:`)
   data.forEach(d => {
     if (d.body === '') return
-    notes.append(`<li style="color:#919191;">«<i style="color:#000;">${d.body}</i>» написал некто ${new Date(d.created * 1000).toLocaleDateString()}</li>`)
+    notes.append(`<li style="color:#919191;">«<i style="color:#000;">${escapeHtml(d.body)}</i>» написал некто ${new Date(d.created * 1000).toLocaleDateString()}</li>`)
   })
 }

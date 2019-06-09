@@ -11,3 +11,17 @@ function google10c(n) {
       '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac']
   return colors[n % colors.length]
 }
+
+function escapeHtml (string) {
+  const entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  }
+  return String(string).replace(/[&<>"'`=\/]/g, s => entityMap[s])
+}
