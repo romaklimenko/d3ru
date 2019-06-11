@@ -238,12 +238,15 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
   })
 
   // trendline
-  const min_created = d3.min(allActivities, d => d.created)
-  const now_created = Math.floor(new Date().getTime() / 1000.0) + 86400
+  const min_created_date = new Date(d3.min(allActivities, d => d.created) * 1000)
+  min_created_date.setHours(0, 0, 0, 0)
+  const min_created = Math.floor(min_created_date.getTime() / 1000)
+  const now_created = Math.floor(new Date().getTime() / 1000)
   let current_created = min_created
 
   while (current_created <= now_created) {
-    const date = new Date(new Date(current_created * 1000).setHours(0, 0, 0, 0))
+    const date = new Date(current_created * 1000)
+    date.setHours(0, 0, 0, 0)
     const key = date.toISOString()
     if (!dict[key]) {
       dict[key] = {
@@ -262,14 +265,10 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
 
   // это место очевидно можно ускорить
   filled_data.forEach((day, i) => {
-    if (i < window_size - 1) {
-      day.mean = d3.sum(filled_data.slice(0, i), d => d.count) / window_size
-      return
-    }
-    const from = i - window_size + 1
-    const to = from + window_size
+    const from = Math.max(0, i - window_size + 1)
+    const to = from + Math.min(i + 1, window_size)
     const window = filled_data.slice(from, to)
-    day.mean = d3.sum(window, d => d.count) / window_size
+    day.mean = d3.sum(window, d => d.count) / window.length
   })
 
   const line = d3.line()
