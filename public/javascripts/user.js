@@ -268,7 +268,7 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
     const from = Math.max(0, i - window_size + 1)
     const to = from + Math.min(i + 1, window_size)
     const window = filled_data.slice(from, to)
-    day.mean = d3.sum(window, d => d.count) / window.length
+    day.mean = d3.sum(window, d => d.count) / window_size
   })
 
   const line = d3.line()
