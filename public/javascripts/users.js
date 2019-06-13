@@ -141,7 +141,7 @@ function render(activities, element) {
     data.forEach(d => all_activities = all_activities.concat(d.activities))
 
     const x = d3.scaleTime()
-      .domain(d3.extent(all_activities, d => d.date))
+      .domain(d3.extent([d3.min(all_activities, d => d.date), new Date()]))
       .range([margin.left, width - margin.right])
 
     const y = d3.scaleTime()

@@ -119,7 +119,7 @@ function renderActivitiesChart(activities, element) {
   const svg = d3.select(element)
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
+    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleTime()
@@ -192,7 +192,7 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
   const svg = d3.select(chartElement)
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
+    .domain(d3.extent([d3.min(data, d => d.date), new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
@@ -384,7 +384,7 @@ function renderSleepsChart(activities, element) {
   })
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
+    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleTime()
@@ -452,7 +452,7 @@ function renderRatingChart(activities, element) {
   const svg = d3.select(element)
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.datetime))
+    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
@@ -720,7 +720,7 @@ async function renderKarma(user, element) {
   const svg = d3.select(element)
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.datetime))
+    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
