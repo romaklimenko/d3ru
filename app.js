@@ -27,20 +27,20 @@ app.use(require('compression')())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => res.render('index', { title: 'dirty' }))
-app.get('/elections', (req, res) => res.render('elections', { title: 'dirty - выборы' }))
-app.get('/tokens', (req, res) => res.render('tokens', { title: 'dirty - доступ' }))
-app.get('/user', (req, res) => res.render('user', { title: 'dirty - пользователь' }))
+app.get('/elections', (req, res) => res.render('elections', { title: 'выборы' }))
+app.get('/tokens', (req, res) => res.render('tokens', { title: 'доступ' }))
+app.get('/user', (req, res) => res.render('user', { title: 'пользователь' }))
 app.get('/users', (req, res) => {
   // избегаем breaking changes: /users?user=romaklimenko редиректится на /user?user=romaklimenko
   if (req.query.user) {
     res.redirect(req.url.replace('/users', '/user'))
   }
   else {
-    res.render('users', { title: 'dirty - сравнение пользователей' })
+    res.render('users', { title: 'сравнение пользователей' })
   }
 })
 
-app.get('/notes', (req, res) => res.render('notes', { title: 'dirty - заметки' }))
+app.get('/notes', (req, res) => res.render('notes', { title: 'заметки' }))
 
 app.use('/ajax', require('./routes/ajax'))
 app.use('/api', require('./routes/api'))
