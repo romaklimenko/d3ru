@@ -456,7 +456,7 @@ function renderRatingChart(activities, element) {
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
-    .domain(d3.extent(data, d => d.cumulativeRating))
+    .domain(d3.extent([Math.min(0, d3.min(data, d => d.cumulativeRating)), Math.max(d3.max(data, d => d.cumulativeRating))]))
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
