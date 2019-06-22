@@ -122,8 +122,12 @@ function renderActivitiesChart(activities, element) {
     .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
     .range([margin.left, width - margin.right])
 
+  const fromTime = new Date(1900, 0)
+  fromTime.setHours(0, 0, 0)
+  const toTime = new Date(1900, 0)
+  fromTime.setHours(23, 59, 59)
   const y = d3.scaleTime()
-    .domain(d3.extent(data, d => d.time).reverse())
+    .domain(d3.extent([toTime, fromTime]).reverse())
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
