@@ -615,11 +615,18 @@ function renderRating(activities) {
     if (rating[a.domain]) {
       rating[a.domain].rating += a.rating
       rating[a.domain].count++
+      if (a.post_id) {
+        rating[a.domain].preferencesRating += 1
+      }
+      else {
+        rating[a.domain].preferencesRating += 10
+      }
     }
     else {
       rating[a.domain] = {
         rating: a.rating,
-        count: 1
+        count: 1,
+        preferencesRating: a.post_id ? 1 : 10
       }
     }
   })
@@ -629,7 +636,8 @@ function renderRating(activities) {
       return {
         domain: key,
         rating: rating[key].rating,
-        count: rating[key].count
+        count: rating[key].count,
+        preferencesRating: rating[key].preferencesRating
       }
     })
     .sort((a, b) => {
@@ -644,6 +652,7 @@ function renderRating(activities) {
             <td>${d.count}</td>
             <td>${d.rating}</td>
             <td>${Math.floor((d.rating / d.count) * 100) / 100}</td>
+            <td>${d.preferencesRating}</td>
         </tr>`)
     })
 
