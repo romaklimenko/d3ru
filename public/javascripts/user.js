@@ -776,7 +776,7 @@ async function renderKarma(user, element) {
 
   for (let i = data.length; i--;) {
     const vote = data[i]
-    const key = vote.datetime.toISOString().substring(0, 10)
+    const key = vote.datetime.toLocaleDateString()
     if (by_date[key] === undefined) {
       by_date[key] = {
         votes: [vote],
@@ -807,7 +807,7 @@ async function renderKarma(user, element) {
     log.append(`<strong>${key} (<span style="color:${date.up === 0 ? '#000' : positive}">+${date.up}</span>&#09;<span style="color:${date.down === 0 ? '#000' : negative}">-${Math.abs(date.down)}</span>&#09;&rarr; <span style="color:${delta_color}">${(delta) >= 0 ? '+' : ''}${delta}</span>):</strong>`)
 
     for (let j = 0; j < date.votes.length; j++) {
-      log.append(`<div>&nbsp;<span style="color:${date.votes[j].vote > 0 ? positive : negative}">${date.votes[j].vote > 0 ? '+' : ''}${date.votes[j].vote}</span>&#09;${date.votes[j].datetime.toISOString().substring(11, 19)}&#09;<a href="https://d3.ru/user/${date.votes[j].user.login}/" target="_blank">${date.votes[j].user.login}</a></div>`)
+      log.append(`<div>&nbsp;<span style="color:${date.votes[j].vote > 0 ? positive : negative}">${date.votes[j].vote > 0 ? '+' : ''}${date.votes[j].vote}</span>&#09;${date.votes[j].datetime.toLocaleTimeString()}&#09;<a href="https://d3.ru/user/${date.votes[j].user.login}/" target="_blank">${date.votes[j].user.login}</a></div>`)
     }
   }
 }
