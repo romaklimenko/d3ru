@@ -804,7 +804,7 @@ async function renderKarma(user, element) {
     let delta_color = '#000'
     if (delta > 0) delta_color = positive
     if (delta < 0) delta_color = negative
-    log.append(`<strong>${key} (<span style="color:${date.up === 0 ? '#000' : positive}">+${date.up}</span>&#09;<span style="color:${date.down === 0 ? '#000' : negative}">-${Math.abs(date.down)}</span>&#09;&rarr; <span style="color:${delta_color}">${(delta) >= 0 ? '+' : ''}${delta}</span>):</strong>`)
+    log.append(`<a href="https://d3.ru/search/?author=${user}&date_start=${date.votes[0].changed - 86400 * 3 - 600}&date_end=${date.votes[0].changed + 600}&sort=date" target="_blank">${key}</a> <strong>(<span style="color:${date.up === 0 ? '#000' : positive}">+${date.up}</span>&#09;<span style="color:${date.down === 0 ? '#000' : negative}">-${Math.abs(date.down)}</span>&#09;&rarr; <span style="color:${delta_color}">${(delta) >= 0 ? '+' : ''}${delta}</span>):</strong>`)
 
     for (let j = 0; j < date.votes.length; j++) {
       log.append(`<div>&nbsp;<span style="color:${date.votes[j].vote > 0 ? positive : negative}">${date.votes[j].vote > 0 ? '+' : ''}${date.votes[j].vote}</span>&#09;${date.votes[j].datetime.toLocaleTimeString()}&#09;<a href="https://d3.ru/user/${date.votes[j].user.login}/" target="_blank">${date.votes[j].user.login}</a></div>`)
