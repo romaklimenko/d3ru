@@ -759,6 +759,17 @@ async function renderKarma(user, element) {
     .attr('stroke', '#000')
     .attr('stroke-width', .75)
 
+  svg.append('g')
+    .selectAll('image')
+    .data(data.filter(d => d.user.login === 'dirty'))
+    .enter()
+    .append('image')
+    .attr('href', '/images/logo_main_retina.png')
+    .attr('x', d => x(d.datetime) - 16)
+    .attr('y', d => y(d.karma) - 16)
+    .attr('heigth', '32px')
+    .attr('width', '32px')
+
   const positive = '#00C853'
   const negative = '#FF5722'
 
