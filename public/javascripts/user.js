@@ -760,15 +760,25 @@ async function renderKarma(user, element) {
     .attr('stroke-width', .75)
 
   svg.append('g')
+    .selectAll('circle')
+    .data(data.filter(d => d.user.login === 'dirty'))
+    .enter()
+    .append('circle')
+    .attr('cx', d => x(d.datetime))
+    .attr('cy', d => y(d.karma))
+    .attr('fill', '#FFAB00')
+    .attr('r', 9)
+
+  svg.append('g')
     .selectAll('image')
     .data(data.filter(d => d.user.login === 'dirty'))
     .enter()
     .append('image')
     .attr('href', '/images/logo_main_retina.png')
-    .attr('x', d => x(d.datetime) - 16)
-    .attr('y', d => y(d.karma) - 16)
-    .attr('heigth', '32px')
-    .attr('width', '32px')
+    .attr('x', d => x(d.datetime) - 24)
+    .attr('y', d => y(d.karma) - 24)
+    .attr('heigth', '48px')
+    .attr('width', '48px')
 
   const positive = '#00C853'
   const negative = '#FF5722'
