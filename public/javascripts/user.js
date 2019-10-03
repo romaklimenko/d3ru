@@ -118,8 +118,10 @@ function renderActivitiesChart(activities, element) {
 
   const svg = d3.select(element)
 
+  const to = getParam('to')
+
   const x = d3.scaleTime()
-    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
+    .domain(d3.extent([d3.min(data, d => d.datetime), to ? new Date(to * 1000) : new Date()]))
     .range([margin.left, width - margin.right])
 
   const fromTime = new Date(1900, 0)
@@ -195,8 +197,10 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
 
   const svg = d3.select(chartElement)
 
+  const to = getParam('to')
+
   const x = d3.scaleTime()
-    .domain(d3.extent([d3.min(data, d => d.date), new Date()]))
+    .domain(d3.extent([d3.min(data, d => d.date), to ? new Date(to * 1000) : new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
@@ -245,7 +249,7 @@ function renderWeekdaysChart(activities, chartElement, reportElement) {
   const min_created_date = new Date(d3.min(allActivities, d => d.created) * 1000)
   min_created_date.setHours(0, 0, 0, 0)
   const min_created = Math.floor(min_created_date.getTime() / 1000)
-  const now_created = Math.floor(new Date().getTime() / 1000)
+  const now_created = Math.floor((to ? new Date(to * 1000) : new Date()).getTime() / 1000)
   let current_created = min_created
 
   while (current_created <= now_created) {
@@ -387,8 +391,10 @@ function renderSleepsChart(activities, element) {
     }
   })
 
+  const to = getParam('to')
+
   const x = d3.scaleTime()
-    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
+    .domain(d3.extent([d3.min(data, d => d.datetime), to ? new Date(to * 1000) : new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleTime()
@@ -455,8 +461,10 @@ function renderRatingChart(activities, element) {
 
   const svg = d3.select(element)
 
+  const to = getParam('to')
+
   const x = d3.scaleTime()
-    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
+    .domain(d3.extent([d3.min(data, d => d.datetime), to ? new Date(to * 1000) : new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
@@ -665,7 +673,7 @@ function renderRating(activities) {
 }
 
 async function renderKarma(user, element) {
-  const data = []
+  let data = []
   let page = 1
   let page_count = 1
 
@@ -719,6 +727,16 @@ async function renderKarma(user, element) {
     v.datetime = new Date(v.changed * 1000)
   })
 
+  const from = getParam('from')
+  const to = getParam('to')
+
+  if (from) {
+    data = data.filter(d => d.changed >= from)
+  }
+  if (to) {
+    data = data.filter(d => d.changed <= to)
+  }
+
   console.log('karma', data)
 
   const height = element.getAttribute('height')
@@ -733,7 +751,7 @@ async function renderKarma(user, element) {
   const svg = d3.select(element)
 
   const x = d3.scaleTime()
-    .domain(d3.extent([d3.min(data, d => d.datetime), new Date()]))
+    .domain(d3.extent([d3.min(data, d => d.datetime), to ? new Date(to * 1000) : new Date()]))
     .range([margin.left, width - margin.right])
 
   const y = d3.scaleLinear()
